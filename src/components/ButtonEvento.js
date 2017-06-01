@@ -6,7 +6,7 @@ export default class ButtonEvento extends Component {
 
   render() {
     return (
-      <Button title={this.props.nome} onPress={() => Actions.FormMenuDia()}/>
+      <Button style={{fontSize: 16}} title={this.props.nome} onPress={() => Actions.FormMenuDia()}/>
     );
   }  
 }

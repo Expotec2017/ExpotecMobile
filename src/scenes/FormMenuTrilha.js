@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import ButtonTrilha from '../components/ButtonTrilha';
+import ImagemLogo from '../components/ImagemLogo';
 
 export default class FormMenuTrilha extends Component {
 
@@ -9,7 +10,8 @@ export default class FormMenuTrilha extends Component {
       <View style={styles.container}>
 
         <View style={styles.cabecalho}>
-        </View>
+          <ImagemLogo />
+        </View>   
         
         <View style={styles.detalhes}>
           <Text style={styles.item}>Escolha um curso/palestra da trilha:</Text>
@@ -35,12 +37,15 @@ styles = StyleSheet.create({
 		flex: 10
   },
 
+  cabecalho:{
+    flex: 5, 
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },  
+
   item:{
 		padding: 5
-  },
-
-  cabecalho:{    
-    flex: 5
   },
 
   detalhes:{    

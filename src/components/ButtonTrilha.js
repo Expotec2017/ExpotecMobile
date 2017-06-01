@@ -6,7 +6,7 @@ export default class ButtonTrilha extends Component {
 
   render() {
     return (
-      <Button title={this.props.nome} onPress={() => Actions.FormQRCodeReader()}/>
+      <Button title={this.props.nome} onPress={() => Actions.FormMenuCheckIn()}/>
     );
   }  
 }

@@ -5,6 +5,7 @@ import FormQRCodeReader from './scenes/FormQRCodeReader';
 import FormMenuEvento from './scenes/FormMenuEvento';
 import FormMenuDia from './scenes/FormMenuDia';
 import FormMenuTrilha from './scenes/FormMenuTrilha';
+import FormMenuCheckIn from './scenes/FormMenuCheckIn';
 
 const Rotas  = () => (
   <Router sceneStyle={{ paddingTop: 50}}>
@@ -12,6 +13,7 @@ const Rotas  = () => (
     <Scene key='FormMenuDia' component={FormMenuDia} title='Dia do Evento' />
     <Scene key='FormMenuTrilha' component={FormMenuTrilha} title='Eventos da Trilha' />
     <Scene key='FormQRCodeReader' component={FormQRCodeReader} title='Aproxime o QR-Code' />
+    <Scene key='FormMenuCheckIn' component={FormMenuCheckIn} title='Tipo de Leitura' />
   </Router>
 );
 

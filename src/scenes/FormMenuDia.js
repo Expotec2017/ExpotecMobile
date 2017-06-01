@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import ButtonDia from '../components/ButtonDia';
+import ImagemLogo from '../components/ImagemLogo';
 
 export default class FormMenuDia extends Component {
 
@@ -9,7 +10,8 @@ export default class FormMenuDia extends Component {
       <View style={styles.container}>
 
         <View style={styles.cabecalho}>
-        </View>
+          <ImagemLogo />
+        </View>    
         
         <View style={styles.detalhes}>
           <Text style={styles.item}>Escolha a data:</Text>
@@ -35,16 +37,19 @@ styles = StyleSheet.create({
 		flex: 10
   },
 
-  item:{
-		padding: 10
-  },
+  cabecalho:{
+    flex: 5, 
+    flexDirection: 'column', 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },  
 
-  cabecalho:{    
-    flex: 5
+  item:{
+		padding: 25
   },
 
   detalhes:{    
     flex: 5
-  }  
+  }
 
 });

@@ -3,7 +3,7 @@ import {AppRegistry} from 'react-native';
 
 import App from './src/App';
 
-export default class iputmobile extends Component {
+export default class ExpotecMobile extends Component {
   render() {
     return (
       <App/>
@@ -11,4 +11,4 @@ export default class iputmobile extends Component {
   }
 }
 
-AppRegistry.registerComponent('iputmobile', () => iputmobile);
+AppRegistry.registerComponent('ExpotecMobile', () => ExpotecMobile);

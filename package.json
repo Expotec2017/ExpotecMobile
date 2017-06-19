@@ -1,5 +1,5 @@
 {
-  "name": "QRCodeExpotec",
+  "name": "ExpotecMobile",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,17 +7,17 @@
     "test": "jest"
   },
   "dependencies": {
-    "react": "16.0.0-alpha.6",
-    "react-native": "0.43.4",
+    "react": "16.0.0-alpha.12",
+    "react-native": "0.45.1",
     "react-native-barcodescanner": "^3.1.1",
-    "react-native-router-flux": "^3.38.1",
-    "react-qr-reader": "^1.1.0"
+    "react-native-router-flux": "^3.38.0",
+    "react-native-sqlite-storage": "^3.3.1"
   },
   "devDependencies": {
-    "babel-jest": "19.0.0",
-    "babel-preset-react-native": "1.9.1",
-    "jest": "19.0.2",
-    "react-test-renderer": "16.0.0-alpha.6"
+    "babel-jest": "20.0.3",
+    "babel-preset-react-native": "2.0.0",
+    "jest": "20.0.4",
+    "react-test-renderer": "16.0.0-alpha.12"
   },
   "jest": {
     "preset": "react-native"

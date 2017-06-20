@@ -27,10 +27,6 @@ export default class FormQRCodeReader extends Component {
       tx.executeSql('CREATE TABLE IF NOT EXISTS readers (QrCode, DateTime, Type, Event_ID, Event_Day, Trilha_ID, Reader_State)');
       tx.executeSql('SELECT * FROM readers', [], (tx, results) => {
           console.log("Query completed. Resultados: " + results.rows.length);
-
-          //var len = results.rows.length;
-          //for (let i = 0; i < len; i++) {
-          //}
         });
     });    
 

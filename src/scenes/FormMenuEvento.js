@@ -1,11 +1,28 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import axios from 'axios';
+
 import ButtonEvento from '../components/ButtonEvento';
 import ImagemLogo from '../components/ImagemLogo';
 
 export default class FormMenuEvento extends Component {
 
+  constructor(props) {
+    super(props);    
+    this.state = {listaEventos : []};
+  }
+
+  componentWillMount() {
+
+    //requisição HTTP
+    axios.get('http://www.zandonainfo.com.br/eventos.html')
+        .then((response) => {this.setState({ listaEventos : response.data})})
+        .catch(function (error) {console.log(error.message); });    
+  }
+
+
   render() {
+
     return (
 
       <View style={styles.container}> 
@@ -16,13 +33,14 @@ export default class FormMenuEvento extends Component {
 
         <View style={styles.detalhes}>
           <Text style={styles.item}>Escolha um evento:</Text>
-          <View style={styles.item}>
-            <ButtonEvento nome='TADS TECH'/>  
-          </View>      
-          <View style={styles.item}>
-            <ButtonEvento nome='EXPOTEC'/> 
-          </View>
-    
+          { this.state.listaEventos.map( function(item) {
+              return(
+                      <View style={styles.item}>
+                        <ButtonEvento nome={item.nome} />  
+                      </View>
+                    ) 
+              })  
+        }       
         </View>
 
       </View>          

@@ -15,7 +15,7 @@ export default class FormMenuEvento extends Component {
   componentWillMount() {
 
     //requisição HTTP
-    axios.get('http://www.zandonainfo.com.br/eventos.html')
+    axios.get('http://www.zandonainfo.com.br/eventos.json')
         .then((response) => {this.setState({ listaEventos : response.data})})
         .catch(function (error) {console.log(error.message); });    
   }
@@ -36,11 +36,11 @@ export default class FormMenuEvento extends Component {
           { this.state.listaEventos.map( function(item) {
               return(
                       <View style={styles.item}>
-                        <ButtonEvento nome={item.nome} />  
+                        <ButtonEvento key={item.id} id={item.id} nome={item.nome} />  
                       </View>
                     ) 
               })  
-        }       
+          }       
         </View>
 
       </View>          

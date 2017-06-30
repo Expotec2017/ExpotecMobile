@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native';
 import BarcodeScanner from 'react-native-barcodescanner';
+import {Actions} from 'react-native-router-flux';
+import {connect} from 'react-redux';
+
+import { modificaQRCode } from '../actions/LeituraActions';
 let SQLite = require('react-native-sqlite-storage');
 
-export default class FormQRCodeReader extends Component {
+export class FormQRCodeReader extends Component {
 
   constructor(props) {
     super(props);
@@ -11,39 +15,26 @@ export default class FormQRCodeReader extends Component {
   }
 
   inserirBD(qrcode){
+    //Abre conexão com banco de dados
     let db = SQLite.openDatabase({name: 'expotec.db', location: 'Library'}, this.openCB, this.errorCB);
+    
+    //Insere leituras pendentes para sincronização  
     db.transaction((tx) => {
-      var vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Event_Day, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)'; 
+      let vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Event_Day, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)'; 
       tx.executeSql(vSQL, [qrcode, 'IN', 1, 9, 1, 'P'], (tx, results) => {
-          console.log("Inserção realizada");
+          console.log("Inserção realizada.");
         });
     });        
   }
 
-  selectBD(){
-    let db = SQLite.openDatabase({name: 'expotec.db', location: 'Library'}, this.openCB, this.errorCB);
-
-    db.transaction((tx) => {
-      tx.executeSql('CREATE TABLE IF NOT EXISTS readers (QrCode, DateTime, Type, Event_ID, Event_Day, Trilha_ID, Reader_State)');
-      tx.executeSql('SELECT * FROM readers', [], (tx, results) => {
-          console.log("Query completed. Resultados: " + results.rows.length);
-        });
-    });    
-
-  }
-
   barcodeReceived(e) {
-    alert('Barcode: ' + e.data);
+    this.props.modificaQRCode(e.data);
     inserirBD(e.data);
-    //selectBD();
+    Actions.FormLeituraRegistrada();
   }
 
   errorCB(err) {
     console.log("SQL Error: " + err);
-  }
-
-  successCB() {
-    console.log("SQL executed fine");
   }
 
   openCB() {
@@ -60,3 +51,11 @@ export default class FormQRCodeReader extends Component {
     );
   }  
 }
+
+const mapStateToProps = state =>(
+  {
+    qrCode: state.LeituraReducer.qrCode
+  }
+); 
+
+export default connect(mapStateToProps, { modificaQRCode})(FormQRCodeReader);

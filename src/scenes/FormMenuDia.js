@@ -14,7 +14,7 @@ export default class FormMenuDia extends Component {
 
   componentWillMount() {
     //requisição HTTP
-    axios.get('http://www.zandonainfo.com.br/dias.html')
+    axios.get('http://www.zandonainfo.com.br/dias.json')
         .then((response) => {this.setState({ listaDias : response.data})})
         .catch(() => {console.log('Erro ao recuperar os dados dos dias.'); });    
   }
@@ -34,7 +34,7 @@ export default class FormMenuDia extends Component {
             this.state.listaDias.map( function(item) {
               return(
                 <View style={styles.item}>
-                  <ButtonDia dia={item.data} />  
+                  <ButtonDia key={item.data} dia={item.data} />  
                 </View>
               ) 
             })

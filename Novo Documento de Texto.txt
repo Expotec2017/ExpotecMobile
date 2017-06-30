@@ -1,0 +1,1 @@
+tx.executeSql('CREATE TABLE IF NOT EXISTS readers (QrCode, DateTime, Type, Event_ID, Event_Day, Trilha_ID, Reader_State)');

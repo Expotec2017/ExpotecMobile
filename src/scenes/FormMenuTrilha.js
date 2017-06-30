@@ -15,7 +15,7 @@ export default class FormMenuTrilha extends Component {
 
   componentWillMount() {
     //requisição HTTP
-    axios.get('http://www.zandonainfo.com.br/trilhas.html')
+    axios.get('http://www.zandonainfo.com.br/trilhas.json')
         .then((response) => {this.setState({ listaTrilha : response.data})})
         .catch(() => {console.log('Erro ao recuperar os dados da trilha.'); });    
   }
@@ -37,7 +37,7 @@ export default class FormMenuTrilha extends Component {
             this.state.listaTrilha.map( function(item) {
               return(
                 <View style={styles.item}>
-                  <ButtonTrilha nome={item.nome} />  
+                  <ButtonTrilha key={item.id} id={item.id} nome={item.nome} />  
                 </View>
               ) 
             })

@@ -1,12 +1,29 @@
 import React, { Component } from 'react';
 import {Button} from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import {connect} from 'react-redux';
 
-export default class ButtonDia extends Component {
+import { modificaData } from '../actions/LeituraActions';
+
+export class ButtonDia extends Component {
+
+	clickBotao(){
+		this.props.modificaData(this.props.dia);
+		Actions.FormMenuTrilha();
+	}
 
   render() {
     return (
-      <Button title={this.props.dia} onPress={() => Actions.FormMenuTrilha()}/>
+      <Button title={this.props.dia} onPress={() => clickBotao()}/>
     );
   }  
 }
+
+const mapStateToProps = state =>(
+  {
+    data : state.LeituraReducer.data
+  }
+); 
+
+export default connect(mapStateToProps, { modificaData })(ButtonDia);
+

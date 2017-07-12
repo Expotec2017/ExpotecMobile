@@ -14,7 +14,7 @@ export class ButtonDia extends Component {
 
   render() {
     return (
-      <Button title={this.props.dia} onPress={() => clickBotao()}/>
+      <Button title={this.props.dia} onPress={() => this.clickBotao()}/>
     );
   }  
 }

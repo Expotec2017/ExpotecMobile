@@ -8,6 +8,11 @@ import ImagemLogo from '../components/ImagemLogo';
 
 export default class FormMenuCheckIn extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {status: ''};    
+  }
+
   sincronizarDados(){
 
     //Abre conexão com banco de dados
@@ -16,13 +21,15 @@ export default class FormMenuCheckIn extends Component {
     //Seleciona os registros de leituras pendentes para sincronização  
     db.transaction((tx) => {
       tx.executeSql('SELECT * FROM readers WHERE Reader_State = ?', ['P'], (tx, results) => {
-          
-          console.log("Query completed. Resultados: " + results.rows.length);
+      
+          this.setState({status: 'Resultados pendentes: ' + results.rows.length});    
+          alert("Query completed. Resultados: " + results.rows.length);
 
           //passa por todos os registros  
           let len = results.rows.length;
           for (let i = 0; i < len; i++) {
             let row = results.rows.item(i);            
+            this.setState({status: 'Resultado atual: ' + (i + 1) + ' de ' + len});    
 
             //Envia os registros para o servidor via API
             axios.post('http://www.zandonainfo.com.br/receive.php', {qrCode: row.QrCode, dateTime: row.DateTime, type: row.Type, event_id: row.Event_ID, event_day: row.Event_Day, trilha_id: row.Trilha_ID})
@@ -31,13 +38,14 @@ export default class FormMenuCheckIn extends Component {
                 //se conseguiu inserir o post, atualiza para enviado
                 db.transaction((tx) => {
                   let vSQL = 'UPDATE readers SET Reader_State = ? WHERE QrCode = ? AND Event_ID = ? AND Trilha_ID = ? '; 
-                  tx.executeSql(vSQL, ['E', qrcode, 1, 9], (tx, results) => {
+                  tx.executeSql(vSQL, ['E', row.QrCode, row.Event_ID, row.Trilha_ID], (tx, results) => {
                       console.log("Atualização realizada.");
                     });
                 });  
 
               })
               .catch(function (error) {
+                alert('erro');
                 console.log(error);
               });                    
           }
@@ -74,6 +82,7 @@ export default class FormMenuCheckIn extends Component {
           <View style={styles1.item}>
             <Button title='SINCRONIZAR DADOS' onPress={() => this.sincronizarDados()}/>    
           </View>          
+          <Text>Status: {this.state.status}</Text>
         </View>
 
       </View>         

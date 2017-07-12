@@ -15,7 +15,7 @@ export class ButtonEvento extends Component {
   
   render() {
     return (
-      <Button style={{fontSize: 16}} title={this.props.nome} onPress={() => clickBotao()}/>
+      <Button style={{fontSize: 16}} title={this.props.nome} onPress={() => this.clickBotao()}/>
     );
   }  
 }

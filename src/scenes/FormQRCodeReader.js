@@ -9,28 +9,31 @@ let SQLite = require('react-native-sqlite-storage');
 
 export class FormQRCodeReader extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {torchMode: 'off', cameraType: 'back'};    
-  }
-
-  inserirBD(qrcode){
+  inserirBD(){
     //Abre conexão com banco de dados
     let db = SQLite.openDatabase({name: 'expotec.db', location: 'Library'}, this.openCB, this.errorCB);
     
     //Insere leituras pendentes para sincronização  
     db.transaction((tx) => {
-      let vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Event_Day, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?)'; 
-      tx.executeSql(vSQL, [qrcode, 'IN', 1, 9, 1, 'P'], (tx, results) => {
+      let vSQL = 'CREATE TABLE IF NOT EXISTS readers (QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State)'; 
+      tx.executeSql(vSQL, [], (tx, results) => {
+          console.log("Criado tabela.");
+        });
+
+      vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?)'; 
+      tx.executeSql(vSQL, [this.props.qrCode, this.props.tipo, this.props.evento_id, this.props.trilha_id, 'P'], (tx, results) => {
           console.log("Inserção realizada.");
         });
     });        
+    
   }
 
   barcodeReceived(e) {
     this.props.modificaQRCode(e.data);
-    inserirBD(e.data);
+    this.inserirBD();
+    this.props.modificaQRCode('');
     Actions.FormLeituraRegistrada();
+    Actions.pop();  
   }
 
   errorCB(err) {
@@ -43,18 +46,17 @@ export class FormQRCodeReader extends Component {
 
   render() {
     return (
-      <BarcodeScanner onBarCodeRead={this.barcodeReceived} 
-                        style={{ flex: 1 }} 
-                        torchMode={this.state.torchMode} 
-                        cameraType={this.state.cameraType}/>               
-      
+      <BarcodeScanner onBarCodeRead={this.barcodeReceived} style={{ flex: 1 }} torchMode='off' cameraType='back'/>               
     );
   }  
 }
 
 const mapStateToProps = state =>(
   {
-    qrCode: state.LeituraReducer.qrCode
+    qrCode: state.LeituraReducer.qrCode,
+    tipo  : state.LeituraReducer.tipo,
+    evento_id : state.LeituraReducer.evento_id,
+    trilha_id : state.LeituraReducer.trilha_id
   }
 ); 
 

@@ -39,3 +39,10 @@ export const modificaData = (texto) =>{
 		payload: texto
 	}
 }
+
+export const modificaTipo = (texto) =>{
+	return{
+		type: 'modifica_tipo',
+		payload: texto
+	}
+}

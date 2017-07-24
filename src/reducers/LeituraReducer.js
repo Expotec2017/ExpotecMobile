@@ -4,7 +4,8 @@ const INITIAL_STATE = {
 	trilha_id   : 0,
 	trilha_nome : '',	
 	qrCode      : '',
-	data        : ''
+	data        : '',
+	tipo		: 'IN'
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -33,6 +34,9 @@ export default (state = INITIAL_STATE, action) => {
 		return { ...state, data: action.payload}
 	}
 
+	if(action.type == 'modifica_tipo'){
+		return { ...state, tipo: action.payload}
+	}
 
 	return state;
 }

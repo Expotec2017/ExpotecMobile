@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import axios from 'axios';
-
 import ButtonEvento from '../components/ButtonEvento';
 import ImagemLogo from '../components/ImagemLogo';
 

@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import axios from 'axios';
+import {connect} from 'react-redux';
+
+
+import { modificaTipo } from '../actions/LeituraActions';
 let SQLite = require('react-native-sqlite-storage');
 
 import ImagemLogo from '../components/ImagemLogo';
 
-export default class FormMenuCheckIn extends Component {
+export class FormMenuCheckIn extends Component {
 
   constructor(props) {
     super(props);
@@ -23,7 +27,6 @@ export default class FormMenuCheckIn extends Component {
       tx.executeSql('SELECT * FROM readers WHERE Reader_State = ?', ['P'], (tx, results) => {
       
           this.setState({status: 'Resultados pendentes: ' + results.rows.length});    
-          alert("Query completed. Resultados: " + results.rows.length);
 
           //passa por todos os registros  
           let len = results.rows.length;
@@ -32,7 +35,7 @@ export default class FormMenuCheckIn extends Component {
             this.setState({status: 'Resultado atual: ' + (i + 1) + ' de ' + len});    
 
             //Envia os registros para o servidor via API
-            axios.post('http://www.zandonainfo.com.br/receive.php', {qrCode: row.QrCode, dateTime: row.DateTime, type: row.Type, event_id: row.Event_ID, event_day: row.Event_Day, trilha_id: row.Trilha_ID})
+            axios.post('http://www.zandonainfo.com.br/receive.php', {qrCode: row.QrCode, dateTime: row.DateTime, type: row.Type, event_id: row.Event_ID, trilha_id: row.Trilha_ID})
               .then(function (response) {
 
                 //se conseguiu inserir o post, atualiza para enviado
@@ -55,6 +58,11 @@ export default class FormMenuCheckIn extends Component {
 
   }
 
+  abrirCamera(tipo){
+    this.props.modificaTipo(tipo);
+    Actions.FormQRCodeReader();  
+  }
+
   errorCB(err) {
     console.log("SQL Error: " + err);
   }
@@ -65,49 +73,62 @@ export default class FormMenuCheckIn extends Component {
 
   render() {
     return (
-      <View style={styles1.container}>
+      <View style={styles.container}>
 
         <View style={styles.cabecalho}>
           <ImagemLogo />
         </View>    
         
-        <View style={styles1.detalhes}>
-          <Text style={styles1.item}>Escolha o tipo de leitura:</Text>
-          <View style={styles1.item}>
-            <Button title='CHECK-IN' color='green' onPress={() => Actions.FormQRCodeReader()}/>  
+        <View style={styles.detalhes}>
+          <Text style={styles.item}>Escolha o tipo de leitura:</Text>
+          <View style={styles.item}>
+            <Button title='CHECK-IN' color='green' onPress={() => this.abrirCamera('IN')}/>  
           </View>
-          <View style={styles1.item}>
-            <Button title='CHECK-OUT' color='red' onPress={() => Actions.FormQRCodeReader()}/>    
-          </View>
-          <View style={styles1.item}>
+          <View style={styles.item}>
+            <Button title='CHECK-OUT' color='red' onPress={() => this.abrirCamera('OUT')}/>    
+          </View> 
+          <View style={styles.item}>
+            <Button title='LEITURA MANUAL' color='#800080' onPress={() => Actions.FormLeituraManual()}/>    
+          </View> 
+          <View style={styles.item}>
             <Button title='SINCRONIZAR DADOS' onPress={() => this.sincronizarDados()}/>    
-          </View>          
+          </View>         
           <Text>Status: {this.state.status}</Text>
         </View>
 
       </View>         
     );
   }  
+
+  styles = StyleSheet.create({
+
+    container:{
+      flex: 10
+    },
+
+    cabecalho:{
+      flex: 5, 
+      flexDirection: 'column', 
+      justifyContent: 'center', 
+      alignItems: 'center'
+    },  
+
+    detalhes:{    
+      flex: 5
+    },
+
+    item:{
+      padding: 5
+    },
+  });
+
 }
 
-styles1 = StyleSheet.create({
 
-  container:{
-    flex: 10
-  },
+const mapStateToProps = state =>(
+  {
+    tipo  : state.LeituraReducer.tipo
+  }
+); 
 
-  cabecalho:{
-    flex: 5, 
-    flexDirection: 'column', 
-    justifyContent: 'center', 
-    alignItems: 'center'
-  },  
-
-  detalhes:{    
-    flex: 5
-  },
-
-  item:{
-    padding: 5
-  },
-});
+export default connect(mapStateToProps, {modificaTipo})(FormMenuCheckIn);

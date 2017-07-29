@@ -1,59 +1,76 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import axios from 'axios';
-
+import {ActivityIndicator, ListView, View, Text, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
 
 import ButtonTrilha from '../components/ButtonTrilha';
 import ImagemLogo from '../components/ImagemLogo';
+import { modificaData, modificaEventoID } from '../actions/LeituraActions';
 
-export default class FormMenuTrilha extends Component {
+export class FormMenuTrilha extends Component {
 
   constructor(props) {
-    super(props);    
-    this.state = {listaTrilha : []};
+    super(props);
+    this.state = {isLoading: true}
   }
+
+  formatarData(date){
+    return date.substring(8,10) + '/' + date.substring(5,7) + '/' + date.substring(0,4);
+  }  
 
   componentWillMount() {
-    //requisição HTTP
-    axios.get('http://www.zandonainfo.com.br/trilhas.json')
-        .then((response) => {this.setState({ listaTrilha : response.data})})
-        .catch(() => {console.log('Erro ao recuperar os dados da trilha.'); });    
+    return fetch('http://zandonainfo.com.br/eventos_polles.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({
+          isLoading: false,
+          dataSource: this.props.evento_id == 1 ? ds.cloneWithRows(responseJson.events.Expotec.activities) : ds.cloneWithRows(responseJson.events.CITIC.activities),
+        }, function() {
+          // do something with new state
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
-
   render() {
-    return (
-      <View style={styles.container}>
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, paddingTop: 20}}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
 
+    return (      
+      <View style={styles.container}> 
         <View style={styles.cabecalho}>
           <ImagemLogo />
-        </View>   
-        
-        <View style={styles.detalhes}>
-          <Text style={styles.item}>Escolha um curso/palestra da trilha:</Text>
+        </View>    
 
-
-          { 
-            this.state.listaTrilha.map( function(item) {
-              return(
-                <View style={styles.item}>
-                  <ButtonTrilha key={item.id} id={item.id} nome={item.nome} />  
-                </View>
-              ) 
-            })
-          } 
-          
-        </View>
-
-      </View>      
-    );
-  }  
+        <View style={styles.detalhes}>          
+          <Text style={styles.item}>Escolha uma atividade da trilha:</Text>          
+          <ListView dataSource={this.state.dataSource} renderRow={(rowData) => <View>{this.formatarData(rowData.startDate) == this.props.data ? <View style={styles.item}><ButtonTrilha id={rowData.id} key={rowData.id} nome={rowData.name} /></View> : null}</View>} />
+        </View>    
+      </View>          
+    ); 
+  }   
 }
+
+const mapStateToProps = state =>(
+  {
+    data : state.LeituraReducer.data,
+    evento_id : state.LeituraReducer.evento_id
+  }
+); 
+
+export default connect(mapStateToProps, { modificaData, modificaEventoID })(FormMenuTrilha);
 
 styles = StyleSheet.create({
 
   container:{
-		flex: 10
+    flex: 10
   },
 
   cabecalho:{
@@ -64,7 +81,7 @@ styles = StyleSheet.create({
   },  
 
   item:{
-		padding: 5
+    padding: 5
   },
 
   detalhes:{    

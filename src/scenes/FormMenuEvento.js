@@ -1,29 +1,43 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import axios from 'axios';
+import {ActivityIndicator, ListView, View, Text, StyleSheet} from 'react-native';
 import ButtonEvento from '../components/ButtonEvento';
 import ImagemLogo from '../components/ImagemLogo';
 
 export default class FormMenuEvento extends Component {
 
   constructor(props) {
-    super(props);    
-    this.state = {listaEventos : []};
+    super(props);
+    this.state = {isLoading: true, listaAtividades: []}
   }
 
-  componentWillMount() {
-
-    //requisição HTTP
-    axios.get('http://www.zandonainfo.com.br/eventos.json')
-        .then((response) => {this.setState({ listaEventos : response.data})})
-        .catch(function (error) {console.log(error.message); });    
+  componentDidMount() {
+    //conectar na api    
+    return fetch('http://zandonainfo.com.br/eventos_polles.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({
+          isLoading: false,
+          dataSource: ds.cloneWithRows(responseJson.events),
+        }, function() {
+          // do something with new state
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
-
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, paddingTop: 20}}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
 
-    return (
-
+    return (      
       <View style={styles.container}> 
 
         <View style={styles.cabecalho}>
@@ -31,21 +45,12 @@ export default class FormMenuEvento extends Component {
         </View>    
 
         <View style={styles.detalhes}>
-          <Text style={styles.item}>Escolha um evento:</Text>
-          { this.state.listaEventos.map( function(item) {
-              return(
-                      <View style={styles.item}>
-                        <ButtonEvento key={item.id} id={item.id} nome={item.nome} />  
-                      </View>
-                    ) 
-              })  
-          }       
-        </View>
-
+          <Text style={styles.item}>Escolha um evento:</Text>          
+          <ListView dataSource={this.state.dataSource} renderRow={(rowData) => <View style={styles.item}><ButtonEvento listaAtividades={rowData.activities} key={rowData.id} id={rowData.id} nome={rowData.name} /></View>} />
+        </View>    
       </View>          
-
-    );
-  }  
+    ); 
+  }   
 }
 
 styles = StyleSheet.create({

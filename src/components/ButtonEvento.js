@@ -10,12 +10,12 @@ export class ButtonEvento extends Component {
 	clickBotao(){
 		this.props.modificaEventoID(this.props.id);
 		this.props.modificaEventoNome(this.props.nome);
-		Actions.FormMenuDia();
+		Actions.FormMenuDia(this.props.listaAtividades);
 	}
   
   render() {
     return (
-      <Button key={this.props.key} style={{fontSize: 16}} title={this.props.nome} onPress={() => this.clickBotao()}/>
+      <Button style={{fontSize: 16}} title={this.props.nome} onPress={() => this.clickBotao()}/>
     );
   }  
 }

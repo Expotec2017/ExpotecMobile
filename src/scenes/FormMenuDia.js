@@ -1,55 +1,56 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import axios from 'axios';
+import {ActivityIndicator, ListView, View, Text, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
 
 import ButtonDia from '../components/ButtonDia';
 import ImagemLogo from '../components/ImagemLogo';
+import { modificaEventoID } from '../actions/LeituraActions';
 
-export default class FormMenuDia extends Component {
+export class FormMenuDia extends Component {
 
   constructor(props) {
-    super(props);    
-    this.state = {listaDias : []};
-  }
-
-  componentWillMount() {
-    //requisição HTTP
-    axios.get('http://www.zandonainfo.com.br/dias.json')
-        .then((response) => {this.setState({ listaDias : response.data})})
-        .catch(() => {console.log('Erro ao recuperar os dados dos dias.'); });    
+    super(props);
   }
 
   render() {
-    return (
-      <View style={styles.container}>
+    return (      
+      <View style={styles.container}> 
 
         <View style={styles.cabecalho}>
           <ImagemLogo />
         </View>    
-        
+
         <View style={styles.detalhes}>
-          <Text style={styles.item}>Escolha a data:</Text>
-
-          { 
-            this.state.listaDias.map( function(item) {
-              return(
-                <View style={styles.item}>
-                  <ButtonDia key={item.data} dia={item.data} />  
-                </View>
-              ) 
-            })
-          }               
-        </View>
-
-      </View>         
-    );
-  }  
+          <Text style={styles.item}>Escolha a data:</Text>    
+          <View style={styles.item}>
+            <ButtonDia key={1} dia={'09/08/2017'} />
+          </View>          
+          <View style={styles.item}>
+            <ButtonDia key={2} dia={'10/08/2017'} />
+          </View>          
+          <View style={styles.item}>
+            <ButtonDia key={3} dia={'11/08/2017'} />
+          </View>          
+          <View style={styles.item}>
+            <ButtonDia key={4} dia={'12/08/2017'} />
+          </View>          
+        </View>    
+      </View>          
+    ); 
+  }   
 }
 
-styles = StyleSheet.create({
+const mapStateToProps = state =>(
+  {
+    evento_id : state.LeituraReducer.evento_id
+  }
+); 
 
-  container:{
-		flex: 10
+export default connect(mapStateToProps, { modificaEventoID })(FormMenuDia);
+
+styles = StyleSheet.create({
+  container: {
+    flex:10
   },
 
   cabecalho:{
@@ -57,14 +58,14 @@ styles = StyleSheet.create({
     flexDirection: 'column', 
     justifyContent: 'center', 
     alignItems: 'center'
-  },  
+  },
 
   item:{
-		padding: 25
+    padding: 25
   },
 
   detalhes:{    
     flex: 5
-  }
+  }  
 
 });

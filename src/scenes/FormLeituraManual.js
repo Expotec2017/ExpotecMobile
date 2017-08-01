@@ -22,13 +22,8 @@ export class FormLeituraManual extends Component {
     
     //Insere leituras pendentes para sincronização  
     db.transaction((tx) => {
-      let vSQL = 'CREATE TABLE IF NOT EXISTS readers (QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State)'; 
-      tx.executeSql(vSQL, [], (tx, results) => {
-          console.log("Criado tabela.");
-        });
-
-      vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?)'; 
-      tx.executeSql(vSQL, [this.props.qrCode, this.props.tipo, this.props.evento_id, this.props.trilha_id, 'P'], (tx, results) => {
+      let vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?)'; 
+      tx.executeSql(vSQL, [this.props.qrCode, this.props.tipo == 'IN' ? 1 : 2, this.props.evento_id, this.props.trilha_id, 'P'], (tx, results) => {
           console.log("Inserção realizada.");
         });
     });        

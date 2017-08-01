@@ -10,7 +10,7 @@ export class ButtonEvento extends Component {
 	clickBotao(){
 		this.props.modificaEventoID(this.props.id);
 		this.props.modificaEventoNome(this.props.nome);
-		Actions.FormMenuDia(this.props.listaAtividades);
+		Actions.FormMenuDia();
 	}
   
   render() {

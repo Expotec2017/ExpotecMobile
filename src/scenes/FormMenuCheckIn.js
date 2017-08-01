@@ -35,8 +35,10 @@ export class FormMenuCheckIn extends Component {
             this.setState({status: 'Resultado atual: ' + (i + 1) + ' de ' + len});    
 
             //Envia os registros para o servidor via API
-            axios.post('http://www.zandonainfo.com.br/receive.php', {qrCode: row.QrCode, dateTime: row.DateTime, type: row.Type, event_id: row.Event_ID, trilha_id: row.Trilha_ID})
+            axios.defaults.headers.post['Content-Type'] = 'application/json';
+            axios.post('http://187.19.101.152:8080/api/mobile/check/new/list', JSON.stringify({checks: [{Activity_id: row.Trilha_ID, Subscription_id: row.QrCode, type: row.Type, checked_at: row.DateTime}]}))
               .then(function (response) {
+                console.log(response);  
 
                 //se conseguiu inserir o post, atualiza para enviado
                 db.transaction((tx) => {
@@ -123,7 +125,6 @@ export class FormMenuCheckIn extends Component {
   });
 
 }
-
 
 const mapStateToProps = state =>(
   {

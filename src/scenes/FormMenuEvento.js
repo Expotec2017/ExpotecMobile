@@ -12,7 +12,7 @@ export default class FormMenuEvento extends Component {
 
   componentDidMount() {
     //conectar na api    
-    return fetch('http://zandonainfo.com.br/eventos_polles.json')
+    return fetch('http://187.19.101.152:8080/api/mobile/events')
       .then((response) => response.json())
       .then((responseJson) => {
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});

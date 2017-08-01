@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {ActivityIndicator, ListView, View, Text, StyleSheet} from 'react-native';
+import {ActivityIndicator, ListView, View, Text, StyleSheet, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 
 import ButtonTrilha from '../components/ButtonTrilha';
@@ -18,7 +18,7 @@ export class FormMenuTrilha extends Component {
   }  
 
   componentWillMount() {
-    return fetch('http://zandonainfo.com.br/eventos_polles.json')
+    return fetch('http://187.19.101.152:8080/api/mobile/events')
       .then((response) => response.json())
       .then((responseJson) => {
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -51,7 +51,9 @@ export class FormMenuTrilha extends Component {
 
         <View style={styles.detalhes}>          
           <Text style={styles.item}>Escolha uma atividade da trilha:</Text>          
+          <ScrollView>
           <ListView dataSource={this.state.dataSource} renderRow={(rowData) => <View>{this.formatarData(rowData.startDate) == this.props.data ? <View style={styles.item}><ButtonTrilha id={rowData.id} key={rowData.id} nome={rowData.name} /></View> : null}</View>} />
+          </ScrollView>
         </View>    
       </View>          
     ); 

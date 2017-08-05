@@ -1,27 +1,29 @@
 import React, { Component } from 'react';
 import {ActivityIndicator, ListView, View, Text, StyleSheet} from 'react-native';
 import ButtonEvento from '../components/ButtonEvento';
+import ButtonSincronizar from '../components/ButtonSincronizar';
 import ImagemLogo from '../components/ImagemLogo';
+import {connect} from 'react-redux';
 
-export default class FormMenuEvento extends Component {
+import { modificaCPF, modificaToken } from '../actions/AutenticacaoActions';
+
+export class FormMenuEvento extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {isLoading: true, listaAtividades: []}
+    this.state = {isLoading: true}
   }
 
   componentDidMount() {
     //conectar na api    
-    return fetch('http://187.19.101.152:8080/api/mobile/events')
+    return fetch('http://187.19.101.152:8080/api/mobile/events', 
+                  {method: 'POST',
+                  headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+                  body: JSON.stringify({document: this.props.cpf, token: this.props.token})})
       .then((response) => response.json())
       .then((responseJson) => {
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({
-          isLoading: false,
-          dataSource: ds.cloneWithRows(responseJson.events),
-        }, function() {
-          // do something with new state
-        });
+        this.setState({isLoading: false, dataSource: ds.cloneWithRows(responseJson.events)}, function() {});
       })
       .catch((error) => {
         console.error(error);
@@ -47,11 +49,23 @@ export default class FormMenuEvento extends Component {
         <View style={styles.detalhes}>
           <Text style={styles.item}>Escolha um evento:</Text>          
           <ListView dataSource={this.state.dataSource} renderRow={(rowData) => <View style={styles.item}><ButtonEvento listaAtividades={rowData.activities} key={rowData.id} id={rowData.id} nome={rowData.name} /></View>} />
+          <View style={styles.item}>
+            <ButtonSincronizar/>    
+          </View>            
         </View>    
       </View>          
     ); 
   }   
 }
+
+const mapStateToProps = state => (
+  {
+    cpf: state.AutenticacaoReducer.cpf,
+    token: state.AutenticacaoReducer.token    
+  }
+);
+
+export default connect(mapStateToProps, {modificaCPF, modificaToken})(FormMenuEvento);
 
 styles = StyleSheet.create({
   container: {

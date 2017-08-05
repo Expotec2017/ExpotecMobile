@@ -20,6 +20,15 @@ export class FormLeituraManual extends Component {
     //Abre conexão com banco de dados
     let db = SQLite.openDatabase({name: 'expotec.db', location: 'Library'}, this.openCB, this.errorCB);
     
+    //Cria tabela  
+    db.transaction((tx) => {
+      let vSQL = 'CREATE TABLE IF NOT EXISTS readers(QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State)'; 
+      tx.executeSql(vSQL, [], (tx, results) => {
+          console.log("Criado tabela");
+        });
+    });       
+    
+    
     //Insere leituras pendentes para sincronização  
     db.transaction((tx) => {
       let vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?)'; 
@@ -42,7 +51,7 @@ export class FormLeituraManual extends Component {
   render() {
 		return (
 		  <View style={stylesManual.container}>
-			  <View style={stylesManual.item}>
+			  <View style={stylesManual.cabecalho}>
 	        <TextInput style={stylesManual.inputLogin} keyboardType='numeric' returnKeyType='next' placeholder='Nº da Inscrição' value={this.props.qrCode} onChangeText={texto => this.props.modificaQRCode(texto)}/>
 			  </View>		  	        
 			  <View style={stylesManual.item}>
@@ -60,23 +69,19 @@ export class FormLeituraManual extends Component {
 stylesManual = StyleSheet.create({
 
   container:{
-    flex: 10
-  },
-
-  cabecalho:{
-    flex: 5, 
-    flexDirection: 'column', 
-    justifyContent: 'center', 
-    alignItems: 'center'
-  },  
-
-  detalhes:{    
-    flex: 5
+    flex: 1
   },
 
   item:{
     padding: 10
   },
+
+  cabecalho:{
+    paddingTop: 40,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 40
+  },  
 
 	inputLogin:{
     fontSize: 20,

@@ -19,7 +19,7 @@ const Rotas  = () => (
     <Scene key='FormMenuCheckIn' component={FormMenuCheckIn} title='Tipo de Leitura' />
     <Scene key='FormLeituraRegistrada' component={FormLeituraRegistrada} title='Leitura Registrada' />
     <Scene key='FormLeituraManual' component={FormLeituraManual} title='Leitura Manual' />
-    <Scene key='FormLogin' component={FormLogin} initil title='Login' />
+    <Scene key='FormLogin' component={FormLogin} initial title='Expotec Mobile' />
   </Router>
 );
 

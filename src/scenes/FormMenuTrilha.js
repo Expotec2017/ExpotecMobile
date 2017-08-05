@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import ButtonTrilha from '../components/ButtonTrilha';
 import ImagemLogo from '../components/ImagemLogo';
 import { modificaData, modificaEventoID } from '../actions/LeituraActions';
+import { modificaCPF, modificaToken } from '../actions/AutenticacaoActions';
 
 export class FormMenuTrilha extends Component {
 
@@ -18,7 +19,10 @@ export class FormMenuTrilha extends Component {
   }  
 
   componentWillMount() {
-    return fetch('http://187.19.101.152:8080/api/mobile/events')
+    return fetch('http://187.19.101.152:8080/api/mobile/events', 
+                  {method: 'POST',
+                  headers: {'Accept': 'application/json','Content-Type': 'application/json'},
+                  body: JSON.stringify({document: this.props.cpf, token: this.props.token})})
       .then((response) => response.json())
       .then((responseJson) => {
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -63,11 +67,13 @@ export class FormMenuTrilha extends Component {
 const mapStateToProps = state =>(
   {
     data : state.LeituraReducer.data,
-    evento_id : state.LeituraReducer.evento_id
+    evento_id : state.LeituraReducer.evento_id,
+    cpf   : state.AutenticacaoReducer.cpf,
+    token : state.AutenticacaoReducer.token  
   }
 ); 
 
-export default connect(mapStateToProps, { modificaData, modificaEventoID })(FormMenuTrilha);
+export default connect(mapStateToProps, { modificaData, modificaEventoID, modificaToken, modificaCPF })(FormMenuTrilha);
 
 styles = StyleSheet.create({
 

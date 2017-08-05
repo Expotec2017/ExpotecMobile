@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import {ActivityIndicator, ListView, View, Text, StyleSheet} from 'react-native';
-import {connect} from 'react-redux';
-
+import {View, Text, StyleSheet} from 'react-native';
 import ButtonDia from '../components/ButtonDia';
 import ImagemLogo from '../components/ImagemLogo';
-import { modificaEventoID } from '../actions/LeituraActions';
 
-export class FormMenuDia extends Component {
+export default class FormMenuDia extends Component {
 
   constructor(props) {
     super(props);
@@ -39,14 +36,6 @@ export class FormMenuDia extends Component {
     ); 
   }   
 }
-
-const mapStateToProps = state =>(
-  {
-    evento_id : state.LeituraReducer.evento_id
-  }
-); 
-
-export default connect(mapStateToProps, { modificaEventoID })(FormMenuDia);
 
 styles = StyleSheet.create({
   container: {

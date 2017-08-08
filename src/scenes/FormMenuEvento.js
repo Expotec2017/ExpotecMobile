@@ -47,11 +47,11 @@ export class FormMenuEvento extends Component {
         </View>    
 
         <View style={styles.detalhes}>
-          <Text style={styles.item}>Escolha um evento:</Text>          
-          <ListView dataSource={this.state.dataSource} renderRow={(rowData) => <View style={styles.item}><ButtonEvento listaAtividades={rowData.activities} key={rowData.id} id={rowData.id} nome={rowData.name} /></View>} />
           <View style={styles.item}>
             <ButtonSincronizar/>    
-          </View>            
+          </View>        
+          <Text style={styles.item}>Escolha um evento:</Text>          
+          <ListView dataSource={this.state.dataSource} renderRow={(rowData) => <View style={styles.item}><ButtonEvento listaAtividades={rowData.activities} key={rowData.id} id={rowData.id} nome={rowData.name} /></View>} />    
         </View>    
       </View>          
     ); 

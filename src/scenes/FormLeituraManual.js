@@ -18,24 +18,22 @@ export class FormLeituraManual extends Component {
 
   inserirBD(){
     //Abre conexão com banco de dados
-    let db = SQLite.openDatabase({name: 'expotec.db', location: 'Library'}, this.openCB, this.errorCB);
-    
-    //Cria tabela  
-    db.transaction((tx) => {
-      let vSQL = 'CREATE TABLE IF NOT EXISTS readers(QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State)'; 
-      tx.executeSql(vSQL, [], (tx, results) => {
-          console.log("Criado tabela");
-        });
-    });       
-    
+    let db = SQLite.openDatabase({name: 'expotec.db', location: 'Library'}, this.openCB, this.errorCB);   
     
     //Insere leituras pendentes para sincronização  
     db.transaction((tx) => {
-      let vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?)'; 
+      let vSQL = 'CREATE TABLE IF NOT EXISTS readers(QrCode VARCHAR(10), DateTime TIMESTAMP, Type INTEGER, Event_ID INTEGER, Trilha_ID INTEGER, Reader_State CHAR(1), PRIMARY KEY(QrCode, Type, Event_ID, Trilha_ID))'; 
+      tx.executeSql(vSQL, [], (tx, results) => {
+          console.log("Criado tabela");
+        });
+
+      vSQL = 'INSERT INTO readers(QrCode, DateTime, Type, Event_ID, Trilha_ID, Reader_State) VALUES(?, CURRENT_TIMESTAMP, ?, ?, ?, ?)'; 
       tx.executeSql(vSQL, [this.props.qrCode, this.props.tipo == 'IN' ? 1 : 2, this.props.evento_id, this.props.trilha_id, 'P'], (tx, results) => {
           console.log("Inserção realizada.");
         });
-    });        
+
+    });          
+
   }
 
   clickBotao(tipo) {
